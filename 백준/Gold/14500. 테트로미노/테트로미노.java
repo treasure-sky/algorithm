@@ -8,8 +8,8 @@ public class Main {
     static int[][] A;
     static int max = Integer.MIN_VALUE;
     static boolean[][] visited;
-    static int[] dx = new int[]{-1, 1, 0, 0};
-    static int[] dy = new int[]{0, 0, 1, -1};
+    static int[] dx = new int[]{-1, 0, 1, 0};
+    static int[] dy = new int[]{0, 1, 0, -1};
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -49,23 +49,19 @@ public class Main {
             dfs(nextX, nextY, level + 1, sum + A[nextX][nextY]);
             visited[nextX][nextY] = false;
         }
-
     }
 
     static void specialBlock(int x, int y) { // 보라색 ㅗ 블럭 처리
         for (int i = 0; i < 4; i++) {
-            try {
                 int sum = A[x][y];
                 for (int j = 0; j < 4; j++) { // 세 방향만 더해주기 (i가 제외할 방향)
                     if (i == j) continue;
-                    sum += A[x + dx[j]][y + dy[j]];
+                    int nextX = x + dx[j];
+                    int nextY = y + dy[j];
+                    if (nextX < 0 || nextX >= n || nextY < 0 || nextY >= m) break; // 배열크기 오버
+                    sum += A[nextX][nextY];
                 }
                 max = Math.max(max, sum);
-            } catch (Exception e) {
-                continue;
-            }
-
-
         }
     }
 }
