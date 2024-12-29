@@ -16,51 +16,39 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-        boolean[][] A = new boolean[N][M];
+        int[][] A = new int[N][M];
+        Queue<int[]> queue = new LinkedList<>();
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < M; j++) {
-                A[i][j] = st.nextToken().charAt(0) == '1';
+                int input = Integer.parseInt(st.nextToken());
+                if (input == 1) {
+                    A[i][j] = 1;
+                    queue.add(new int[]{i, j}); // 상어 위치 큐에 넣기
+                }
             }
         }
 
-        int result = 0;
+        while (!queue.isEmpty()) {
+            int[] cur = queue.poll();
+            int x = cur[0];
+            int y = cur[1];
+            for (int i = 0; i < 8; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+                if (nx < 0 || nx >= N || ny < 0 || ny >= M || A[nx][ny] != 0) continue;
+                A[nx][ny] = A[x][y] + 1;
+                queue.add(new int[]{nx, ny});
+            }
+        }
 
-        // 모든 칸 순회
+        int maxDistance = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
-                // 1인 칸은 패스
-                if(A[i][j]) continue;
-
-                // 0인 칸은 bfs
-                boolean[][] visited = new boolean[N][M];
-                visited[i][j] = true;
-                Queue<int[]> queue = new LinkedList<>();
-                queue.add(new int[]{i, j, 0});
-                boolean isEndBfs = false;
-                while (!queue.isEmpty() && !isEndBfs) {
-                    int[] cur = queue.poll();
-                    for (int k = 0; k < 8; k++) {
-                        int nextX = cur[0] + dx[k];
-                        int nextY = cur[1] + dy[k];
-                        int nextDis = cur[2] + 1;
-                        if (nextX < 0 || nextX >= N || nextY < 0 || nextY >= M) continue;
-                        if (visited[nextX][nextY]) continue;
-                        visited[nextX][nextY] = true;
-                        if (A[nextX][nextY]){ // 다음 칸에 상어가 있는 경우
-                            if (nextDis > result){
-                                result = nextDis;
-                            }
-                            isEndBfs = true; // 현재 칸의 bfs는 종료
-                            break;
-                        }
-                        queue.add(new int[]{nextX, nextY, nextDis});
-                    }
-                }
-
-
+                maxDistance = Math.max(maxDistance, A[i][j]);
             }
         }
-        System.out.println(result);
+
+        System.out.println(maxDistance - 1);
     }
 }
