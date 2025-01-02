@@ -1,34 +1,36 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int n = sc.nextInt(); // 사람 수
-        int[] health = new int[n + 1]; // 체력 감소 배열
-        int[] happiness = new int[n + 1]; // 행복 배열
-
+        int n = Integer.parseInt(st.nextToken());
+        int[] health = new int[n + 1];
+        int[] happiness = new int[n + 1];
+        StringTokenizer stHealth = new StringTokenizer(br.readLine());
+        StringTokenizer stHappiness = new StringTokenizer(br.readLine());
         for (int i = 1; i <= n; i++) {
-            health[i] = sc.nextInt();
+            health[i] = Integer.parseInt(stHealth.nextToken());
+            happiness[i] = Integer.parseInt(stHappiness.nextToken());
         }
 
+        // DP[i][j] : i번째 사람까지 고려했을 때 j의 체력을 가지고 얻을 수 있는 최대 행복
+        int[][] DP = new int[n + 1][100];
         for (int i = 1; i <= n; i++) {
-            happiness[i] = sc.nextInt();
-        }
-
-        int maxHealth = 100; // 체력은 최대 100
-        int[][] dp = new int[n + 1][maxHealth]; // DP 테이블
-
-        for (int i = 1; i <= n; i++) {
-            for (int j = 0; j < maxHealth; j++) {
+            for (int j = 0; j < 100; j++) {
                 if (j < health[i]) {
-                    dp[i][j] = dp[i - 1][j]; // 체력이 부족한 경우
-                } else {
-                    dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - health[i]] + happiness[i]);
+                    DP[i][j] = DP[i-1][j];
+                    continue;
                 }
+                DP[i][j] = Math.max(DP[i - 1][j], DP[i - 1][j - health[i]] + happiness[i]);
             }
         }
 
-        System.out.println(dp[n][99]); // 체력이 1 이상 남아있는 경우의 최대 행복 출력
+        System.out.println(DP[n][99]);
+
     }
 }
