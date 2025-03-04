@@ -1,11 +1,12 @@
 import java.util.*;
 class Solution {
     public int solution(int[] diffs, int[] times, long limit) {
-        int answer = 1;
+        int answer = -1;
         int maxL = Arrays.stream(diffs).max().getAsInt();
         int minL = 1;
-        int level = 50000;
-        while(true){
+        while(maxL >= minL){
+            int level = (minL + maxL) / 2;
+            
             long sumOfTime = times[0]; // 처음 문제푸는 시간
             for(int i=1; i < diffs.length; i++){ // 그 다음 문제푸는 시간
                 int retryNum = diffs[i] - level > 0 ? diffs[i] - level : 0;
@@ -13,12 +14,9 @@ class Solution {
             }
             if(sumOfTime <= limit){
                 answer = level;
-                maxL = level;
-                if(level == (maxL + minL)/2) break;
-                level = (maxL + minL) / 2;
+                maxL = level - 1;
             }else{
                 minL = level + 1;
-                level = (maxL + minL) / 2;
             }
         }
         return answer;
@@ -28,7 +26,9 @@ class Solution {
 // class Solution {
 //     public int solution(int[] diffs, int[] times, long limit) {
 //         int answer = 1;
-//         int level = 1;
+//         int maxL = Arrays.stream(diffs).max().getAsInt();
+//         int minL = 1;
+//         int level = (minL + maxL) / 2;
 //         while(true){
 //             long sumOfTime = times[0]; // 처음 문제푸는 시간
 //             for(int i=1; i < diffs.length; i++){ // 그 다음 문제푸는 시간
@@ -37,9 +37,12 @@ class Solution {
 //             }
 //             if(sumOfTime <= limit){
 //                 answer = level;
-//                 break;
+//                 maxL = level;
+//                 if(level == (maxL + minL)/2) break;
+//                 level = (maxL + minL) / 2;
 //             }else{
-//                 level++;
+//                 minL = level + 1;
+//                 level = (maxL + minL) / 2;
 //             }
 //         }
 //         return answer;
