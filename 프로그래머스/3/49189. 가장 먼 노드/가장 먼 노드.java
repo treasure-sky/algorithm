@@ -33,7 +33,6 @@ class Solution {
             int[] cur = q.poll();
             int curNode = cur[0];
             int curDepth = cur[1];
-            System.out.println(curNode + " "+ curDepth);
             
             // depth 변수보다 깊이가 깊으면 depth 업데이트 및 cnt = 1
             // 깊이가 같으면 depth++
