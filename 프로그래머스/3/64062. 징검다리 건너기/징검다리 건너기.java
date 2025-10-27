@@ -1,6 +1,4 @@
 import java.util.*;
-// 제일 적게 남아있는 거 제거하기
-// 제거하고 옆에 0인 디딤돌이 몇 개 이어져있는 지 체크하기
 class Solution {
     static int n;
 
@@ -12,7 +10,6 @@ class Solution {
         int ans = -1;
         while(low <= high){
             mid = (high + low) / 2;
-            System.out.println(low + " " + mid + " " + high);
             if(check(stones, mid, k)){
                 ans = mid;
                 low = mid + 1;
