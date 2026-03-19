@@ -6,14 +6,18 @@ import java.util.StringTokenizer;
 
 public class Main {
     static long REMAIN_VALUE = 1_000_000_007;
-    static long[] cache;
+    static long[] exp;
 
     public static void main(String[] args) throws IOException {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
         long[] A = new long[n];
-        cache = new long[n];
+        exp = new long[n];
+        exp[0] = 1;
+        for (int i = 1; i < n; i++) {
+            exp[i] = exp[i - 1] * 2 % REMAIN_VALUE;
+        }
 
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < n; i++) {
@@ -24,30 +28,17 @@ public class Main {
 
         long acc = 0L;
 
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = i + 1; j < n; j++) {
-                acc += (two(j - i - 1) * ((A[j] - A[i]) % REMAIN_VALUE)) % REMAIN_VALUE;
-            }
+        for (int i = 0; i < n; i++) {
+            acc = (acc + exp[i] * A[i]) % REMAIN_VALUE;
+            acc = (acc - exp[n - 1 - i] * A[i]) % REMAIN_VALUE;
         }
+
+        if (acc < 0) {
+            acc += REMAIN_VALUE;
+        }
+
         System.out.println(acc % REMAIN_VALUE);
 
-
-    }
-
-    static long two(int n) {
-        if (n == 0) {
-            return 1;
-        }
-        if (cache[n] != 0) {
-            return cache[n];
-        }
-        long res = 1;
-        for (int i = 0; i < n; i++) {
-            res *= 2;
-            res %= REMAIN_VALUE;
-        }
-        cache[n] = res;
-        return res;
     }
 
 }
