@@ -21,7 +21,7 @@ public class Main {
                 from = to;
                 to = temp;
             }
-
+            
             A[i][0] = from;
             A[i][1] = to;
             A[i][2] = A[i][1] - A[i][0];
@@ -30,15 +30,15 @@ public class Main {
         Arrays.sort(A, Comparator.comparingInt(a -> a[1])); // 오른쪽 점 기준으로 오름차순 정렬
 
         int d = Integer.parseInt(br.readLine());
-        Queue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
+        Queue<Integer> pq = new PriorityQueue<>();
         int res = 0;
 
         for (int[] cur : A) {
             if (cur[2] <= d) { // d보다 작은 선분의 경우
-                while(pq.peek() != null && pq.peek()[0] < ((long) cur[1] - (long) d)){
+                while(pq.peek() != null && pq.peek() < ((long) cur[1] - (long) d)){
                     pq.poll();
                 }
-                pq.add(new int[]{cur[0], cur[1]}); // 큐에 넣고
+                pq.add(cur[0]); // 큐에 넣고
 
                 res = Math.max(res, pq.size());
             }
